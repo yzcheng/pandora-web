@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<mvc:annotation-driven />
+
+	<mvc:default-servlet-handler />
+
+	<context:component-scan base-package="ns.ap" />
+
+	<aop:aspectj-autoproxy />
+	
+  <!-- Aspect -->
+  <bean id="loggingAspect" class="ns.aspect.LoggingAspect" />
+  <aop:config>
+    <aop:aspect ref="loggingAspect">
+      <aop:pointcut id="controlllers" expression="execution(* ns..*.*(..))"/>
+      <aop:before method="before" pointcut-ref="controlllers"/>
+    </aop:aspect>
+  </aop:config>
+
+</beans>
