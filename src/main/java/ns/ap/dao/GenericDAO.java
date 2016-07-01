@@ -1,6 +1,5 @@
 package ns.ap.dao;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,15 +18,12 @@ public class GenericDAO
 		return this;
 	}
 
-	public List<Map<String, Object>> findByCommand(String command)
+	public List<Map<String, Object>> queryForList(String sql)
 	{
-		//find SQL by command.
-		
 		//execute SQL.
-		List<Map<String, Object>> xxx = this.namedParameterJdbcTemplate.queryForList("select sysdate() from dual", new HashMap<String, Object>());
+		List<Map<String, Object>> queryResult = this.namedParameterJdbcTemplate.queryForList(sql, new HashMap<String, Object>());
+		
 		//return
-		Map<String, Object> m = new HashMap<String, Object>();
-		m.put("BOOK_NAME", "愛麗絲的夢遊仙境");
-		return Arrays.asList(m);
+		return queryResult;
 	}
 }

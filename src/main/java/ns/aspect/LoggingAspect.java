@@ -13,8 +13,6 @@ public class LoggingAspect
 	
 	public void before(JoinPoint joinPoint)
 	{
-		log.info("logBefore() is running!");
-		log.info("hijacked : " + joinPoint.getSignature().getName());
-		log.info("******");
+		log.info("****** hijacked : {}.{} ******",  joinPoint.getTarget().getClass().getSimpleName(), joinPoint.getSignature().getName());
 	}
 }

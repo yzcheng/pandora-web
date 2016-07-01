@@ -14,14 +14,22 @@
         http://www.springframework.org/schema/aop/spring-aop.xsd">
         
     <context:component-scan base-package="ns.ap" />
-
+    <bean id="namedParameterJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+      <constructor-arg ref="pandora"/>
+    </bean>
+    
+    <bean id="pandoraDAO" class="ns.ap.dao.PandoraDAO">
+      <property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate"></property>
+    </bean>
+    
+    
     <bean id="genericDAO" class="ns.ap.dao.GenericDAO" scope="prototype" />
 
-    <bean id="noname" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${noname.jdbc.driverClassName}"/>
-        <property name="url" value="${noname.jdbc.url}"/>
-        <property name="username" value="${noname.jdbc.username}"/>
-        <property name="password" value="${noname.jdbc.password}"/>
+    <bean id="pandora" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${pandora.jdbc.driverClassName}"/>
+        <property name="url" value="${pandora.jdbc.url}"/>
+        <property name="username" value="${pandora.jdbc.username}"/>
+        <property name="password" value="${pandora.jdbc.password}"/>
     </bean>
 
     <bean id="demo" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
