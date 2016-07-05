@@ -9,8 +9,8 @@ import javax.sql.DataSource;
 
 import ns.ap.dao.GenericDAO;
 import ns.ap.dao.PandoraDAO;
-import ns.ap.generic.vo.GenericRequest;
 import ns.ap.vo.PandoraCommand;
+import ns.ap.vo.PandoraRequest;
 import ns.util.ApplicationContextHelper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,22 +46,54 @@ public class MyController
 		
 		List<Map<String, Object>> result = null;
 		
-		if(pCmd.getType().equals("JDBC"))
+		Protocol protocal = Protocol.valueOf(pCmd.getTargetProtocol());
+		switch(protocal)
 		{
-			String dsName = MessageFormat.format("{0}{1}", pCmd.getInstanceName(), pCmd.getCategory());
-			DataSource ds = (DataSource) ApplicationContextHelper.getBean(dsName);
-			result = genericDAO.setDataSource(ds).queryForList(pCmd.getContent());
+			case JDBC:
+				DataSource ds = (DataSource) ApplicationContextHelper.getBean(pCmd.getTargetName());
+				result = genericDAO.setDataSource(ds).queryForList(pCmd.getContent());
+				break;
 		}
 		
 		return result;
 	}
 	
-	@RequestMapping(value="/service", method = {RequestMethod.GET, RequestMethod.POST}, produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="/pandoraService", method = {RequestMethod.GET, RequestMethod.POST}, produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public List<Map<String, Object>> service(@RequestBody GenericRequest request) throws Exception
+	public Object pandoraService(@RequestBody PandoraRequest request) throws Exception
 	{
-		DataSource ds = (DataSource) ApplicationContextHelper.getBean("demo");
-		List<Map<String, Object>> result = genericDAO.setDataSource(ds).queryForList(request.getMethod_name());
+		PandoraCommand pCmd = pandoraDAO.querybyCommand(request.getCommand());
+		if(pCmd == null)
+			throw new Exception(MessageFormat.format("Pandora Command {0} is not found!", request.getCommand()));
+		
+		Object result = null;
+		
+		Protocol protocal = Protocol.valueOf(pCmd.getTargetProtocol());
+		Action action = Action.valueOf(pCmd.getTargetAction());
+		
+		switch(protocal)
+		{
+			case JDBC:
+				DataSource ds = (DataSource) ApplicationContextHelper.getBean(pCmd.getTargetName());
+				result = genericDAO.setDataSource(ds).queryForList(pCmd.getContent(), request.getParams());
+				break;
+		}
+		
 		return result;
+	}
+	
+	/**
+	 * Create the available protocol
+	 * @author Kenny
+	 *
+	 */
+	public enum Protocol
+	{
+		JDBC
+	}
+	
+	public enum Action
+	{
+		QUERY
 	}
 }

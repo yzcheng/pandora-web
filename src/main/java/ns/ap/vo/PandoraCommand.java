@@ -1,16 +1,26 @@
 package ns.ap.vo;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
-public class PandoraCommand
+public class PandoraCommand implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8722782049828844855L;
+
 	private String command;
-	private String type;
-	private String instanceName;
-	private String category;
+	private String targetProtocol;
+	private String targetName;
+	private String targetAction;
 	private String content;
 	private Date updateTime;
 	private String updateUser;
+
+	// detail
+	private List<PandoraCommandPara> commandParas;
 
 	public String getCommand()
 	{
@@ -22,34 +32,34 @@ public class PandoraCommand
 		this.command = command;
 	}
 
-	public String getType()
+	public String getTargetProtocol()
 	{
-		return type;
+		return targetProtocol;
 	}
 
-	public void setType(String type)
+	public void setTargetProtocol(String targetProtocol)
 	{
-		this.type = type;
+		this.targetProtocol = targetProtocol;
 	}
 
-	public String getInstanceName()
+	public String getTargetName()
 	{
-		return instanceName;
+		return targetName;
 	}
 
-	public void setInstanceName(String instanceName)
+	public void setTargetName(String targetName)
 	{
-		this.instanceName = instanceName;
+		this.targetName = targetName;
 	}
 
-	public String getCategory()
+	public String getTargetAction()
 	{
-		return category;
+		return targetAction;
 	}
 
-	public void setCategory(String category)
+	public void setTargetAction(String targetAction)
 	{
-		this.category = category;
+		this.targetAction = targetAction;
 	}
 
 	public String getContent()
@@ -80,6 +90,20 @@ public class PandoraCommand
 	public void setUpdateUser(String updateUser)
 	{
 		this.updateUser = updateUser;
+	}
+
+	/**
+	 * get parameters, return null if not parameters.
+	 * @return
+	 */
+	public List<PandoraCommandPara> getCommandParas()
+	{
+		return commandParas;
+	}
+
+	public void setCommandParas(List<PandoraCommandPara> commandParas)
+	{
+		this.commandParas = commandParas;
 	}
 
 }
